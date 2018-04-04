@@ -2,9 +2,20 @@
 $(function(){
 var canvas = document.getElementById("canvas");
 canvas.width = window.innerWidth;
-canvas.height = window.innerHeight - 50;
+canvas.height = window.innerHeight - 120;
 var ctx = canvas.getContext("2d"); // 2D rendering space
 
+// SLIDER
+$("#lengthSlider").click(function(){
+  lastCarLength = this.value;
+  $("#lengthDisplay").text("Length: " + lastCarLength);
+  ctx.clearRect(0,0,canvasWidth,canvasHeight);
+  drawHorizontalLines();
+  var car = new Car(this.value-0, CHOSEN_PADDING);
+  car.fill(ctx, lastXPos, lastYPos);
+});
+
+var lastXPos, lastYPos, lastCarLength;
 var PARKING_SPACING = 200; // spacing between each vertical parking line
 var VERTICAL_LINE_LENGTH = 200;
 var PARKING_START_LOCATION = 10;
@@ -18,7 +29,7 @@ var DEFAULT_CAR_PADDING = 5;
 // STAYS UNCHANGE
 var CAR_HEIGHT = 50;
 // CHANGABLE PARAMETERS
-var CHOSEN_CAR_LENGTH = 200;
+var CHOSEN_CAR_LENGTH = 100;
 var CHOSEN_PADDING = 5;
 
 // LOAD THE IMAGE
@@ -29,13 +40,16 @@ img.onload = function(){
 img.src = "../img/player_car.png";
 
 // DRAWING BOARD ===========================================================================================================
-
+lastCarLength = CHOSEN_CAR_LENGTH;
 var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
 car.fill(ctx, window.innerWidth/2, window.innerHeight/2);
 drawHorizontalLines();
+lastXPos = window.innerWidth/2;
+lastYPos = window.innerHeight/2;
 
 
 // FUNCTIONS ===============================================================================================================
+
 
 function drawHorizontalLines(){
   ctx.lineWidth = 10;
@@ -99,8 +113,10 @@ var canvasOffset=$("#canvas").offset();
       if(isDragging){
           ctx.clearRect(0,0,canvasWidth,canvasHeight);
           drawHorizontalLines();
-          var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
+          var car = new Car(lastCarLength-0, CHOSEN_PADDING);
           car.fill(ctx,canMouseX-128/2,canMouseY-120/2);
+          lastXPos = canMouseX-128/2;
+          lastYPos = canMouseY-120/2;
         //  ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);
       }
     }
