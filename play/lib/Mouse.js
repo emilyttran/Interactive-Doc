@@ -1,5 +1,10 @@
 $(function(){
 
+  var canvas = document.getElementById("canvas");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight - 50;
+  var ctx = canvas.getContext("2d"); // 2D rendering space
+
   var canvasOffset=$("#canvas").offset();
     var offsetX=canvasOffset.left;
     var offsetY=canvasOffset.top;
