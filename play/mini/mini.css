@@ -12,6 +12,7 @@ body{
 	border-radius: 5px;
 	color: #fff;
 	text-align: center;
+  display: inline-block;
 
 	position: relative;
 	top:0;
@@ -37,6 +38,42 @@ body{
 	top:-2px;
 }
 #reset:active{
+	background:#999;
+	top:2px;
+}
+#park{
+	padding:5px;
+	background:#aaa;
+	width:80px;
+	border-radius: 5px;
+	color: #fff;
+	text-align: center;
+  display: inline-block;
+
+	position: relative;
+	top:0;
+
+	cursor: pointer;
+	border-bottom: 2px solid #888;
+
+	-webkit-transition: top 0.1s linear;
+    -moz-transition: top 0.1s linear;
+    -ms-transition: top 0.1s linear;
+    -o-transition: top 0.1s linear;
+    transition: top 0.1s linear;
+
+    -webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+
+}
+#park:hover{
+	background:#bbb;
+	top:-2px;
+}
+#park:active{
 	background:#999;
 	top:2px;
 }

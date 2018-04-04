@@ -10,6 +10,8 @@ var VERTICAL_LINE_LENGTH = 200;
 var PARKING_START_LOCATION = 10;
 var NUM_SPACES = 4;
 var SCALE_FACTOR = 0.2;
+var PADDING_FOR_PARKING_FRONT = 5;
+var PADDING_FOR_PARKING_SIDES = 5;
 
 // LOAD CAR IMAGE
 var img = new Image();
@@ -23,6 +25,29 @@ img.src = "../img/player_car.png";
 
 drawVerticalLines();
 drawHorizontalLines();
+
+
+
+// PARK EACH EMPTY SPACE
+function parkCarsAI(){
+  // go through each spot and check if the spot is open
+  var openSpaces = [];
+  for(var i = 1; i < NUM_SPACES + 2; i++){
+      var testX = -PADDING_FOR_PARKING_SIDES + canMouseX-128/2;
+      var testY = -PADDING_FOR_PARKING_FRONT + canMouseY-120/2;
+      var spacing = PARKING_SPACING - 35; // to account for thick width of original parking lines
+      ctx.fillText("hi", testX, testY);
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(testX, testY + (PADDING_FOR_PARKING_FRONT*2) + VERTICAL_LINE_LENGTH);
+      ctx.lineTo(testX, testY);
+      ctx.lineTo(spacing + testX + PADDING_FOR_PARKING_SIDES ,testY);
+      ctx.lineTo(spacing + testX + PADDING_FOR_PARKING_SIDES , testY + (PADDING_FOR_PARKING_FRONT*2) + VERTICAL_LINE_LENGTH);
+      ctx.stroke();
+  }
+  // check to see if there is enough space
+
+}
 
 // RESET FUNCTION
 $("#reset").click(function(){
@@ -44,11 +69,12 @@ function drawHorizontalLines(){
 
 // DRAW VERTICAL LINES
 function drawVerticalLines(){
-  var verticalLines = [];
+  var boxDimensions = [];
   var yPos = PARKING_START_LOCATION;
   var xPos;
 
   for(var i = 1; i < NUM_SPACES+2; i++){
+    boxDimensions[i] = {xPos};
     ctx.lineWidth = 10;
     xPos = i * PARKING_SPACING;
     ctx.beginPath();
@@ -72,6 +98,7 @@ var canvasOffset=$("#canvas").offset();
       canMouseY=parseInt(e.clientY-offsetY);
       // set the drag flag
       isDragging=true;
+      started = true;
     }
 
     function handleMouseUp(e){
@@ -79,6 +106,12 @@ var canvasOffset=$("#canvas").offset();
       canMouseY=parseInt(e.clientY-offsetY);
       // clear the drag flag
       isDragging=false;
+
+      if(started && !isDragging){
+          // ADD IN FUNCTION AFTER DROPPING CAR
+          parkCarsAI();
+      }
+
     }
 
     function handleMouseOut(e){
