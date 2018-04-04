@@ -1,15 +1,24 @@
 // this file will set up the mini game functions and event listeners
 $(function(){
 var canvas = document.getElementById("canvas");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight - 50;
 var ctx = canvas.getContext("2d"); // 2D rendering space
 
 
 var img = new Image();
+var SCALE_FACTOR = 0.3;
 img.onload = function(){
-  ctx.drawImage(img, 100, 100, img.width*0.5, img.height*0.5);
+  ctx.drawImage(img, window.innerWidth/2, window.innerHeight/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);
 }
 
 img.src = "../img/player_car.png";
+
+
+$("#reset").click(function(){
+  ctx.clearRect(0,0,canvasWidth,canvasHeight);
+  ctx.drawImage(img, window.innerWidth/2, window.innerHeight/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);
+})
 
 
 var canvasOffset=$("#canvas").offset();
@@ -46,7 +55,7 @@ var canvasOffset=$("#canvas").offset();
       // if the drag flag is set, clear the canvas and draw the image
       if(isDragging){
           ctx.clearRect(0,0,canvasWidth,canvasHeight);
-          ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*0.5, img.height*0.5);
+          ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);
       }
     }
 
