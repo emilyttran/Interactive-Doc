@@ -1,96 +1,46 @@
-(function(exports){
+$(function(){
 
-	// Singleton
-	var Mouse = {
-		x: 0,
-		y: 0,
-		pressed: false
-	};
-	exports.Mouse = Mouse;
+  var canvasOffset=$("#canvas").offset();
+    var offsetX=canvasOffset.left;
+    var offsetY=canvasOffset.top;
+    var canvasWidth=canvas.width;
+    var canvasHeight=canvas.height;
+    var isDragging=false;
 
-	var canvas = document.getElementById("canvas");
+    function handleMouseDown(e){
+      canMouseX=parseInt(e.clientX-offsetX);
+      canMouseY=parseInt(e.clientY-offsetY);
+      // set the drag flag
+      isDragging=true;
+    }
 
-	// Event Handling
-	var onMouseMove,onTouchMove;
+    function handleMouseUp(e){
+      canMouseX=parseInt(e.clientX-offsetX);
+      canMouseY=parseInt(e.clientY-offsetY);
+      // clear the drag flag
+      isDragging=false;
+    }
 
-	// Cursor
-	Mouse.isOverDraggable = false;
-	function updateCursor(){
-		if(Mouse.isOverDraggable){
-			canvas.style.cursor = "";
-			if(Mouse.pressed){
-				canvas.style.cursor = "-moz-grabbing";
-				if(canvas.style.cursor=="") canvas.style.cursor="-webkit-grabbing";
-				if(canvas.style.cursor=="") canvas.style.cursor="-ms-grabbing";
-				if(canvas.style.cursor=="") canvas.style.cursor="-o-grabbing";
-				if(canvas.style.cursor=="") canvas.style.cursor="grabbing";
-			}else{
-				canvas.style.cursor = "-moz-grab";
-				if(canvas.style.cursor=="") canvas.style.cursor="-webkit-grab";
-				if(canvas.style.cursor=="") canvas.style.cursor="-ms-grab";
-				if(canvas.style.cursor=="") canvas.style.cursor="-o-grab";
-				if(canvas.style.cursor=="") canvas.style.cursor="grab";
-			}
-		}else{
-			canvas.style.cursor = "";
-		}
-	}
+    function handleMouseOut(e){
+      canMouseX=parseInt(e.clientX-offsetX);
+      canMouseY=parseInt(e.clientY-offsetY);
+      // user has left the canvas, so clear the drag flag
+      //isDragging=false;
+    }
 
-	function fixPosition(){
-		//return;
-		/*var BORDER = PEEP_SIZE/2;
-		if(Mouse.x<BORDER) Mouse.x=BORDER;
-		if(Mouse.x>canvas.width-BORDER) Mouse.x=canvas.width-BORDER;
-		if(Mouse.y<BORDER) Mouse.y=BORDER;
-		if(Mouse.y>canvas.height-BORDER) Mouse.y=canvas.height-BORDER;*/
-		// Looks a bit weird?... Esp if offset-grab...
-	}
+    function handleMouseMove(e){
+      canMouseX=parseInt(e.clientX-offsetX);
+      canMouseY=parseInt(e.clientY-offsetY);
+      // if the drag flag is set, clear the canvas and draw the image
+      if(isDragging){
+          ctx.clearRect(0,0,canvasWidth,canvasHeight);
+          ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);
+      }
+    }
 
-	canvas.addEventListener("mousedown",function(event){
-		updateCursor();
-	    Mouse.pressed = true;
-	    onMouseMove(event);
-	    event.preventDefault();
-	    event.stopPropagation();
-	},false);
+    $("#canvas").mousedown(function(e){handleMouseDown(e);});
+    $("#canvas").mousemove(function(e){handleMouseMove(e);});
+    $("#canvas").mouseup(function(e){handleMouseUp(e);});
+    $("#canvas").mouseout(function(e){handleMouseOut(e);});
 
-	canvas.addEventListener("mouseup",function(event){
-		updateCursor();
-	    Mouse.pressed = false;
-	    event.preventDefault();
-	    event.stopPropagation();
-	},false);
-
-	canvas.addEventListener("mousemove",onMouseMove = function(event){
-		updateCursor();
-		Mouse.x = event.pageX;
-		Mouse.y = event.pageY;
-		fixPosition();
-		event.preventDefault();
-	    event.stopPropagation();
-
-	},false);
-
-	canvas.addEventListener("touchstart",function(event){
-	    Mouse.pressed = true;
-	    onTouchMove(event);
-	    event.preventDefault();
-	    event.stopPropagation();
-	},false);
-
-	canvas.addEventListener("touchend",function(event){
-	    Mouse.pressed = false;
-	    event.preventDefault();
-	    event.stopPropagation();
-	},false);
-
-	canvas.addEventListener("touchmove",onTouchMove = function(event){
-		Mouse.x = event.changedTouches[0].clientX;
-		Mouse.y = event.changedTouches[0].clientY;
-		fixPosition();
-		event.preventDefault();
-	    event.stopPropagation();
-	},false);
-
-
-})(window);
+});
