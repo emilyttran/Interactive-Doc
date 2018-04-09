@@ -5,16 +5,6 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight - 120;
 var ctx = canvas.getContext("2d"); // 2D rendering space
 
-// SLIDER
-$("#lengthSlider").click(function(){
-  lastCarLength = this.value;
-  $("#lengthDisplay").text("Length: " + lastCarLength);
-  ctx.clearRect(0,0,canvasWidth,canvasHeight);
-  drawHorizontalLines();
-  var car = new Car(this.value-0, CHOSEN_PADDING);
-  car.fill(ctx, lastXPos, lastYPos);
-});
-
 var lastXPos, lastYPos, lastCarLength;
 var PARKING_SPACING = 200; // spacing between each vertical parking line
 var VERTICAL_LINE_LENGTH = 200;
@@ -26,10 +16,14 @@ var PADDING_FOR_PARKING_SIDES = 5;
 var CAR_WIDTH = 100;
 var DEFAULT_CAR_LENGTH = 100;
 var DEFAULT_CAR_PADDING = 5;
+// RESULT CAR VARIABLES
+var SMALL_CAR_LENGTH = 180;
+var MED_CAR_LENGTH = 200;
+var LARGE_CAR_LENGTH = 250;
 // STAYS UNCHANGE
 var CAR_HEIGHT = 50;
 // CHANGABLE PARAMETERS
-var CHOSEN_CAR_LENGTH = 100;
+var CHOSEN_CAR_LENGTH = 20;
 var CHOSEN_PADDING = 5;
 
 // LOAD THE IMAGE
@@ -49,6 +43,90 @@ lastYPos = window.innerHeight/2;
 
 
 // FUNCTIONS ===============================================================================================================
+function drawPackedCars(parkCarType){
+  // left side
+  for(var i = 0; i < parkCarType[0].length; i++){
+    var stop = false;
+    var carLength;
+
+    if(parkCarType[0][i] == 1){
+      carLength = SMALL_CAR_LENGTH;
+    } else if(parkCarType[0][i] == 2){
+      carLength = MED_CAR_LENGTH;
+    } else if(parkCarType[0][1] == 3){
+      carLength = LARGE_CAR_LENGTH;
+    } else{
+      stop = true;
+    }
+
+    carLength -= 170;
+    if(!stop){
+      var car = new Car(carLength, CHOSEN_PADDING);
+      car.fill(ctx,i*SMALL_CAR_LENGTH + CHOSEN_PADDING, 40);
+
+      }
+  }
+  // right side
+  for(var i = 0; i < parkCarType[1].length; i++){
+
+  }
+
+  /*for(var i = 0; i < parkCarType.length; i++){ // go through each bin
+    for(var j = 0; j < parkCarType[i].length; j++){ // go through each car of the bin
+    // ctx.fillText("Bin: " + i + "  Car #: " + j, 400, 200 + (20*j+(10*i)));      <--- for correct indexing
+
+    var stop = false;
+    var carLength;
+    // find out car length
+    if(parkCarType[i][j] == 1){
+      carLength = SMALL_CAR_LENGTH;
+    } else if(parkCarType[i][j] == 2){
+      carLength = MED_CAR_LENGTH;
+    } else if(parkCarType[i][j] == 3){
+      carLength = LARGE_CAR_LENGTH;
+    } else{
+      stop = true;
+    }
+
+    if(!stop){
+      var car = new Car(carLength, CHOSEN_PADDING);
+      car.fill(ctx,j*SMALL_CAR_LENGTH, 40);
+
+      }
+    }
+  } */
+}
+
+// takes in array of bin capacities. Returns array of types that can fit
+function binPack(binCapacity){ // bin = capacity of each bin
+  var hasRoom;
+  var tempCarType = []; // keep track of all the cars per bin
+  var parkCarType = []; // 1 = small, 2 = medium, 3 = large
+  for(var i = 0; i < binCapacity.length; i++){ // go through every bin
+    hasRoom = true;
+    tempCarType = []; // empty out the temp
+    while(hasRoom){
+        if(SMALL_CAR_LENGTH + CHOSEN_PADDING > binCapacity[i]){
+          hasRoom = false;
+        } else if(binCapacity[i] >= SMALL_CAR_LENGTH + CHOSEN_PADDING){
+          binCapacity[i] -= SMALL_CAR_LENGTH + CHOSEN_PADDING;
+          tempCarType.push(1);
+        } else if(binCapacity[i] >= MED_CAR_LENGTH + CHOSEN_PADDING){
+          binCapacity[i] -= MED_CAR_LENGTH + CHOSEN_PADDING;
+          tempCarType.push(2);
+        } else if(binCapacity[i] >= LARGE_CAR_LENGTH + CHOSEN_PADDING){
+          binCapacity[i] -= LARGE_CAR_LENGTH + CHOSEN_PADDING;
+          tempCarType.push(3);
+        }
+      }
+      if(tempCarType.length == 0) // if no car was able to fit, add "NO FIT". Otherwise, push the cars
+        parkCarType.push("NO FIT");
+      else
+        parkCarType.push(tempCarType);
+  }
+  return parkCarType;
+
+}
 
 
 function drawHorizontalLines(){
@@ -69,8 +147,52 @@ function Car(leng, padding){
   }
 }
 
+/////////////////////
+// EVENT HANDELERS //
+/////////////////////
 
-// EVENT HANDELERS
+// SLIDER
+$("#lengthSlider").click(function(){
+  //lastCarLength = this.value;
+  CHOSEN_CAR_LENGTH = this.value-0;
+  $("#lengthDisplay").text("Length: " + CHOSEN_CAR_LENGTH);
+  ctx.clearRect(0,0,canvasWidth,canvasHeight);
+  drawHorizontalLines();
+  var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
+  car.fill(ctx, lastXPos, lastYPos);
+
+});
+
+// PARK BUTTON
+$("#park").click(function(){
+  var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
+  ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
+  // lengths depending on the last position of the car (aka parked)
+  LengthL = lastXPos;
+  LengthR = 800 - (lastXPos + PIXEL_CHOSEN_CAR_LENGTH);
+  ctx.fillText("L", LengthL, 25);
+  ctx.fillText("R", -(LengthR - 800), 25);
+  var bin = [];
+  bin[0] = LengthL;
+  bin[1] = LengthR;
+  //bin[0] = 200;
+  //bin[1] = 170;
+  var parkedCars = binPack(bin);
+  ctx.fillText(parkedCars[0], 50, 50);
+  ctx.fillText(parkedCars[1], 200, 50);
+  drawPackedCars(parkedCars);
+})
+
+// RESET BUTTON
+$("#reset").click(function(){
+  var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
+  ctx.clearRect(0,0,canvasWidth,canvasHeight);
+  car.fill(ctx, window.innerWidth/2, window.innerHeight/2);
+  drawHorizontalLines();
+})
+
+
+// MOUSE
 var canvasOffset=$("#canvas").offset();
     var offsetX=canvasOffset.left;
     var offsetY=canvasOffset.top;
@@ -94,7 +216,6 @@ var canvasOffset=$("#canvas").offset();
 
       if(started && !isDragging){
           // ADD IN FUNCTION AFTER DROPPING CAR
-          parkCarsAI();
       }
 
     }
@@ -113,7 +234,8 @@ var canvasOffset=$("#canvas").offset();
       if(isDragging){
           ctx.clearRect(0,0,canvasWidth,canvasHeight);
           drawHorizontalLines();
-          var car = new Car(lastCarLength-0, CHOSEN_PADDING);
+          //var car = new Car(lastCarLength-0, CHOSEN_PADDING);
+          var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
           car.fill(ctx,canMouseX-128/2,canMouseY-120/2);
           lastXPos = canMouseX-128/2;
           lastYPos = canMouseY-120/2;

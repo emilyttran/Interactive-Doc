@@ -15,10 +15,14 @@ var PADDING_FOR_PARKING_SIDES = 5;
 var CAR_WIDTH = 100;
 var DEFAULT_CAR_LENGTH = 100;
 var DEFAULT_CAR_PADDING = 5;
+// RESULT CAR VARIABLES
+var SMALL_CAR_LENGTH = 75;
+var MED_CAR_LENGTH = 100;
+var LARGE_CAR_LENGTH = 120;
 // STAYS UNCHANGE
 var CAR_HEIGHT = 50;
 // CHANGABLE PARAMETERS
-var CHOSEN_CAR_LENGTH = 200;
+var CHOSEN_CAR_LENGTH = 100;
 var CHOSEN_PADDING = 5;
 
 // LOAD THE IMAGE
@@ -36,6 +40,7 @@ drawHorizontalLines();
 
 
 // FUNCTIONS ===============================================================================================================
+
 
 function drawHorizontalLines(){
   ctx.lineWidth = 10;
@@ -55,8 +60,24 @@ function Car(leng, padding){
   }
 }
 
+/////////////////////
+// EVENT HANDELERS //
+/////////////////////
 
-// EVENT HANDELERS
+// PARK BUTTON
+$("#park").click(function(){
+
+})
+
+// RESET BUTTON
+$("#reset").click(function(){
+  var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
+  ctx.clearRect(0,0,canvasWidth,canvasHeight);
+  car.fill(ctx, window.innerWidth/2, window.innerHeight/2);
+  drawHorizontalLines();
+})
+
+// MOUSE
 var canvasOffset=$("#canvas").offset();
     var offsetX=canvasOffset.left;
     var offsetY=canvasOffset.top;
@@ -80,7 +101,7 @@ var canvasOffset=$("#canvas").offset();
 
       if(started && !isDragging){
           // ADD IN FUNCTION AFTER DROPPING CAR
-          parkCarsAI();
+
       }
 
     }
