@@ -24,7 +24,7 @@ var LARGE_CAR_LENGTH = 250;
 var CAR_HEIGHT = 50;
 // CHANGABLE PARAMETERS
 var CHOSEN_CAR_LENGTH = 20;
-var CHOSEN_PADDING = 5;
+var CHOSEN_PADDING = 10;
 
 // LOAD THE IMAGE
 var img = new Image();
@@ -53,7 +53,7 @@ function drawPackedCars(parkCarType){
       carLength = SMALL_CAR_LENGTH;
     } else if(parkCarType[0][i] == 2){
       carLength = MED_CAR_LENGTH;
-    } else if(parkCarType[0][1] == 3){
+    } else if(parkCarType[0][i] == 3){
       carLength = LARGE_CAR_LENGTH;
     } else{
       stop = true;
@@ -66,35 +66,33 @@ function drawPackedCars(parkCarType){
 
       }
   }
+
   // right side
   for(var i = 0; i < parkCarType[1].length; i++){
 
-  }
-
-  /*for(var i = 0; i < parkCarType.length; i++){ // go through each bin
-    for(var j = 0; j < parkCarType[i].length; j++){ // go through each car of the bin
-    // ctx.fillText("Bin: " + i + "  Car #: " + j, 400, 200 + (20*j+(10*i)));      <--- for correct indexing
-
     var stop = false;
     var carLength;
-    // find out car length
-    if(parkCarType[i][j] == 1){
+
+    if(parkCarType[1][i] == 1){
       carLength = SMALL_CAR_LENGTH;
-    } else if(parkCarType[i][j] == 2){
+    } else if(parkCarType[1][i] == 2){
       carLength = MED_CAR_LENGTH;
-    } else if(parkCarType[i][j] == 3){
+    } else if(parkCarType[1][i] == 3){
       carLength = LARGE_CAR_LENGTH;
     } else{
       stop = true;
+
     }
 
+    carLength -= 173;
     if(!stop){
       var car = new Car(carLength, CHOSEN_PADDING);
-      car.fill(ctx,j*SMALL_CAR_LENGTH, 40);
+      car.fill(ctx,(i*SMALL_CAR_LENGTH) + CHOSEN_PADDING + lastXPos + CHOSEN_CAR_LENGTH + 173, 40);
 
       }
-    }
-  } */
+  }
+
+
 }
 
 // takes in array of bin capacities. Returns array of types that can fit

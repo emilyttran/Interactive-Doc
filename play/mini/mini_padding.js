@@ -25,6 +25,10 @@ var CAR_HEIGHT = 50;
 // CHANGABLE PARAMETERS
 var CHOSEN_CAR_LENGTH = 20;
 var CHOSEN_PADDING = 10;
+// DRAW RATIOS
+var RATIO_DRAW_PADDING = 0.5;
+var RATIO_DRAW_LENGTH = 8;
+
 
 // LOAD THE IMAGE
 var img = new Image();
@@ -149,7 +153,7 @@ function Car(leng, padding){
 // EVENT HANDELERS //
 /////////////////////
 
-// SLIDER
+// SLIDERS
 $("#lengthSlider").click(function(){
   //lastCarLength = this.value;
   CHOSEN_CAR_LENGTH = this.value-0;
@@ -158,8 +162,35 @@ $("#lengthSlider").click(function(){
   drawHorizontalLines();
   var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
   car.fill(ctx, lastXPos, lastYPos);
-
 });
+
+$("#padSlider").click(function(){
+  //lastCarLength = this.value;
+  CHOSEN_PADDING = this.value-0;
+  $("#padDisplay").text("Padding: " + CHOSEN_PADDING);
+  ctx.clearRect(0,0,canvasWidth,canvasHeight);
+  drawHorizontalLines();
+  var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
+
+  // draw the padding lines
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "blue";
+
+  // left side
+  ctx.beginPath();
+  ctx.moveTo(lastXPos-CHOSEN_PADDING*RATIO_DRAW_PADDING, lastYPos-20);
+  ctx.lineTo(lastXPos-CHOSEN_PADDING*RATIO_DRAW_PADDING, lastYPos+40);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(lastXPos+(CHOSEN_CAR_LENGTH*RATIO_DRAW_LENGTH)+CHOSEN_PADDING, lastYPos-20);
+  ctx.lineTo(lastXPos+(CHOSEN_CAR_LENGTH*RATIO_DRAW_LENGTH)+CHOSEN_PADDING, lastYPos+40);
+  ctx.stroke();
+
+
+  car.fill(ctx, lastXPos, lastYPos);
+});
+
 
 // PARK BUTTON
 $("#park").click(function(){
