@@ -27,7 +27,7 @@ var CHOSEN_CAR_LENGTH = 20;
 var CHOSEN_PADDING = 10;
 // DRAW RATIOS
 var RATIO_DRAW_PADDING = 0.5;
-var RATIO_DRAW_LENGTH = 8;
+var ADDED_DRAW_LENGTH = 160;
 
 
 // LOAD THE IMAGE
@@ -44,6 +44,7 @@ car.fill(ctx, window.innerWidth/2, window.innerHeight/2);
 drawHorizontalLines();
 lastXPos = window.innerWidth/2;
 lastYPos = window.innerHeight/2;
+drawPadding();
 
 
 // FUNCTIONS ===============================================================================================================
@@ -130,6 +131,26 @@ function binPack(binCapacity){ // bin = capacity of each bin
 
 }
 
+function drawPadding(){
+  // draw the padding lines
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "blue";
+
+  // left side
+  ctx.beginPath();
+  ctx.moveTo(lastXPos-CHOSEN_PADDING*RATIO_DRAW_PADDING, lastYPos-20);
+  ctx.lineTo(lastXPos-CHOSEN_PADDING*RATIO_DRAW_PADDING, lastYPos+100);
+  ctx.stroke();
+
+// right side
+  ctx.beginPath();
+  ctx.moveTo(lastXPos+(CHOSEN_CAR_LENGTH+ADDED_DRAW_LENGTH)+CHOSEN_PADDING*RATIO_DRAW_PADDING, lastYPos-20);
+  ctx.lineTo(lastXPos+(CHOSEN_CAR_LENGTH+ADDED_DRAW_LENGTH)+CHOSEN_PADDING*RATIO_DRAW_PADDING, lastYPos+100);
+  ctx.stroke();
+
+}
+
+
 
 function drawHorizontalLines(){
   ctx.lineWidth = 10;
@@ -154,15 +175,6 @@ function Car(leng, padding){
 /////////////////////
 
 // SLIDERS
-$("#lengthSlider").click(function(){
-  //lastCarLength = this.value;
-  CHOSEN_CAR_LENGTH = this.value-0;
-  $("#lengthDisplay").text("Length: " + CHOSEN_CAR_LENGTH);
-  ctx.clearRect(0,0,canvasWidth,canvasHeight);
-  drawHorizontalLines();
-  var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
-  car.fill(ctx, lastXPos, lastYPos);
-});
 
 $("#padSlider").click(function(){
   //lastCarLength = this.value;
@@ -171,45 +183,33 @@ $("#padSlider").click(function(){
   ctx.clearRect(0,0,canvasWidth,canvasHeight);
   drawHorizontalLines();
   var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
-
-  // draw the padding lines
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = "blue";
-
-  // left side
-  ctx.beginPath();
-  ctx.moveTo(lastXPos-CHOSEN_PADDING*RATIO_DRAW_PADDING, lastYPos-20);
-  ctx.lineTo(lastXPos-CHOSEN_PADDING*RATIO_DRAW_PADDING, lastYPos+40);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(lastXPos+(CHOSEN_CAR_LENGTH*RATIO_DRAW_LENGTH)+CHOSEN_PADDING, lastYPos-20);
-  ctx.lineTo(lastXPos+(CHOSEN_CAR_LENGTH*RATIO_DRAW_LENGTH)+CHOSEN_PADDING, lastYPos+40);
-  ctx.stroke();
-
-
+  drawPadding();
   car.fill(ctx, lastXPos, lastYPos);
 });
 
 
 // PARK BUTTON
 $("#park").click(function(){
-  var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
-  ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
-  // lengths depending on the last position of the car (aka parked)
-  LengthL = lastXPos;
-  LengthR = 800 - (lastXPos + PIXEL_CHOSEN_CAR_LENGTH);
-  ctx.fillText("L", LengthL, 25);
-  ctx.fillText("R", -(LengthR - 800), 25);
-  var bin = [];
-  bin[0] = LengthL;
-  bin[1] = LengthR;
-  //bin[0] = 200;
-  //bin[1] = 170;
-  var parkedCars = binPack(bin);
-  ctx.fillText(parkedCars[0], 50, 50);
-  ctx.fillText(parkedCars[1], 200, 50);
-  drawPackedCars(parkedCars);
+  if(lastYPos > 75 || lastYPos < 15){
+    ctx.fillText("BAD PARKING", lastXPos + 60, lastYPos - 10);
+  } else {
+      var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
+      ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
+      // lengths depending on the last position of the car (aka parked)
+      LengthL = lastXPos;
+      LengthR = 800 - (lastXPos + PIXEL_CHOSEN_CAR_LENGTH);
+      ctx.fillText("L", LengthL, 25);
+      ctx.fillText("R", -(LengthR - 800), 25);
+      var bin = [];
+      bin[0] = LengthL;
+      bin[1] = LengthR;
+      //bin[0] = 200;
+      //bin[1] = 170;
+      var parkedCars = binPack(bin);
+      ctx.fillText(parkedCars[0], 50, 50);
+      ctx.fillText(parkedCars[1], 200, 50);
+      drawPackedCars(parkedCars);
+    }
 })
 
 // RESET BUTTON
@@ -268,6 +268,7 @@ var canvasOffset=$("#canvas").offset();
           car.fill(ctx,canMouseX-128/2,canMouseY-120/2);
           lastXPos = canMouseX-128/2;
           lastYPos = canMouseY-120/2;
+          drawPadding();
         //  ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);
       }
     }

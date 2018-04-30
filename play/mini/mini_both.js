@@ -25,6 +25,10 @@ var CAR_HEIGHT = 50;
 // CHANGABLE PARAMETERS
 var CHOSEN_CAR_LENGTH = 20;
 var CHOSEN_PADDING = 10;
+// DRAW RATIOS
+var RATIO_DRAW_PADDING = 0.5;
+var ADDED_DRAW_LENGTH = 160;
+
 
 // LOAD THE IMAGE
 var img = new Image();
@@ -40,6 +44,7 @@ car.fill(ctx, window.innerWidth/2, window.innerHeight/2);
 drawHorizontalLines();
 lastXPos = window.innerWidth/2;
 lastYPos = window.innerHeight/2;
+drawPadding();
 
 
 // FUNCTIONS ===============================================================================================================
@@ -62,7 +67,7 @@ function drawPackedCars(parkCarType){
     carLength -= 170;
     if(!stop){
       var car = new Car(carLength, CHOSEN_PADDING);
-      car.fill(ctx,i*SMALL_CAR_LENGTH + CHOSEN_PADDING, 40);
+      car.fill(ctx,i*SMALL_CAR_LENGTH + CHOSEN_PADDING*RATIO_DRAW_PADDING, 40);
 
       }
   }
@@ -126,6 +131,24 @@ function binPack(binCapacity){ // bin = capacity of each bin
 
 }
 
+function drawPadding(){
+  // draw the padding lines
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "blue";
+
+  // left side
+  ctx.beginPath();
+  ctx.moveTo(lastXPos-CHOSEN_PADDING*RATIO_DRAW_PADDING, lastYPos-20);
+  ctx.lineTo(lastXPos-CHOSEN_PADDING*RATIO_DRAW_PADDING, lastYPos+100);
+  ctx.stroke();
+
+// right side
+  ctx.beginPath();
+  ctx.moveTo(lastXPos+(CHOSEN_CAR_LENGTH+ADDED_DRAW_LENGTH)+CHOSEN_PADDING*RATIO_DRAW_PADDING, lastYPos-20);
+  ctx.lineTo(lastXPos+(CHOSEN_CAR_LENGTH+ADDED_DRAW_LENGTH)+CHOSEN_PADDING*RATIO_DRAW_PADDING, lastYPos+100);
+  ctx.stroke();
+
+}
 
 
 function drawHorizontalLines(){
@@ -150,7 +173,7 @@ function Car(leng, padding){
 // EVENT HANDELERS //
 /////////////////////
 
-// SLIDER
+// SLIDERS
 $("#lengthSlider").click(function(){
   //lastCarLength = this.value;
   CHOSEN_CAR_LENGTH = this.value-0;
@@ -158,9 +181,21 @@ $("#lengthSlider").click(function(){
   ctx.clearRect(0,0,canvasWidth,canvasHeight);
   drawHorizontalLines();
   var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
+  drawPadding();
   car.fill(ctx, lastXPos, lastYPos);
-
 });
+
+$("#padSlider").click(function(){
+  //lastCarLength = this.value;
+  CHOSEN_PADDING = this.value-0;
+  $("#padDisplay").text("Padding: " + CHOSEN_PADDING);
+  ctx.clearRect(0,0,canvasWidth,canvasHeight);
+  drawHorizontalLines();
+  var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
+  drawPadding();
+  car.fill(ctx, lastXPos, lastYPos);
+});
+
 
 // PARK BUTTON
 $("#park").click(function(){
@@ -242,6 +277,7 @@ var canvasOffset=$("#canvas").offset();
           car.fill(ctx,canMouseX-128/2,canMouseY-120/2);
           lastXPos = canMouseX-128/2;
           lastYPos = canMouseY-120/2;
+          drawPadding();
         //  ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);
       }
     }

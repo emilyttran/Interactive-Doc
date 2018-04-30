@@ -153,22 +153,26 @@ function Car(leng, padding){
 
 // PARK BUTTON
 $("#park").click(function(){
-  var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
-  ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
-  // lengths depending on the last position of the car (aka parked)
-  LengthL = lastXPos;
-  LengthR = 800 - (lastXPos + PIXEL_CHOSEN_CAR_LENGTH);
-  ctx.fillText("L", LengthL, 25);
-  ctx.fillText("R", -(LengthR - 800), 25);
-  var bin = [];
-  bin[0] = LengthL;
-  bin[1] = LengthR;
-  //bin[0] = 200;
-  //bin[1] = 170;
-  var parkedCars = binPack(bin);
-  ctx.fillText(parkedCars[0], 50, 50);
-  ctx.fillText(parkedCars[1], 200, 50);
-  drawPackedCars(parkedCars);
+  if(lastYPos > 75 || lastYPos < 15){
+    ctx.fillText("BAD PARKING", lastXPos, lastYPos);
+  } else {
+      var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
+      ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
+      // lengths depending on the last position of the car (aka parked)
+      LengthL = lastXPos;
+      LengthR = 800 - (lastXPos + PIXEL_CHOSEN_CAR_LENGTH);
+      ctx.fillText("L", LengthL, 25);
+      ctx.fillText("R", -(LengthR - 800), 25);
+      var bin = [];
+      bin[0] = LengthL;
+      bin[1] = LengthR;
+      //bin[0] = 200;
+      //bin[1] = 170;
+      var parkedCars = binPack(bin);
+      ctx.fillText(parkedCars[0], 50, 50);
+      ctx.fillText(parkedCars[1], 200, 50);
+      drawPackedCars(parkedCars);
+    }
 })
 
 // RESET BUTTON
