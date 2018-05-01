@@ -67,7 +67,7 @@ function drawPackedCars(parkCarType){
     carLength -= 170;
     if(!stop){
       var car = new Car(carLength, CHOSEN_PADDING);
-      car.fill(ctx,i*SMALL_CAR_LENGTH + CHOSEN_PADDING*RATIO_DRAW_PADDING, 40);
+      car.fill(ctx,i*SMALL_CAR_LENGTH + CHOSEN_PADDING*RATIO_DRAW_PADDING + i*CHOSEN_PADDING, 40);
 
       }
   }
@@ -92,7 +92,7 @@ function drawPackedCars(parkCarType){
     carLength -= 173;
     if(!stop){
       var car = new Car(carLength, CHOSEN_PADDING);
-      car.fill(ctx,(i*SMALL_CAR_LENGTH) + CHOSEN_PADDING + lastXPos + CHOSEN_CAR_LENGTH + 173, 40);
+      car.fill(ctx,(i*SMALL_CAR_LENGTH) + CHOSEN_PADDING + lastXPos + CHOSEN_CAR_LENGTH + 173 + i*CHOSEN_PADDING, 40);
 
       }
   }
@@ -199,8 +199,8 @@ $("#padSlider").click(function(){
 
 // PARK BUTTON
 $("#park").click(function(){
-  if(lastYPos > 75 || lastYPos < 15){
-    ctx.fillText("BAD PARKING", lastXPos + 60, lastYPos - 10);
+  if(lastYPos > 75 || lastYPos < 15 || lastXPos > PARKING_SPACING*(NUM_SPACES+1)-380 - CHOSEN_PADDING*RATIO_DRAW_PADDING || lastXPos < CHOSEN_PADDING*RATIO_DRAW_PADDING){
+    $("#result").text("Way off, buddy. Please try again");
   } else {
       var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
       ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);

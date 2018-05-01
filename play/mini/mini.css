@@ -81,6 +81,7 @@ body{
 .slidecontainer{
   display: inline-block;
   position: relative;
+	margin-top: -40px;
 }
 .slider {
     -webkit-appearance: none;

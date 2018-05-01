@@ -23,7 +23,7 @@ var LARGE_CAR_LENGTH = 250;
 // STAYS UNCHANGE
 var CAR_HEIGHT = 50;
 // CHANGABLE PARAMETERS
-var CHOSEN_CAR_LENGTH = 20;
+var CHOSEN_CAR_LENGTH = 100;
 var CHOSEN_PADDING = 10;
 
 // LOAD THE IMAGE
@@ -43,6 +43,26 @@ lastYPos = window.innerHeight/2;
 
 
 // FUNCTIONS ===============================================================================================================
+function drawResults(parkedCars){
+  var sum = 0;
+
+  // get sum of parked cars
+ for(var i = 0; i < parkedCars.length; i++){
+   for(var j = 0; j < parkedCars[i].length; j++){
+     sum += parkedCars[i][j];
+   }
+ }
+
+ if(lastYPos > 75 || lastYPos < 15 || lastXPos > 539 || lastXPos < 0){
+   $("#result").text("Way off, buddy. Please try again");
+ } else if(sum == 2){
+   $("#result").text("Thanks for parking well :)");
+ }
+ else {
+   $("#result").text("You're wasting space :(");
+ }
+}
+
 function drawPackedCars(parkCarType){
   // left side
   for(var i = 0; i < parkCarType[0].length; i++){
@@ -118,7 +138,7 @@ function binPack(binCapacity){ // bin = capacity of each bin
         }
       }
       if(tempCarType.length == 0) // if no car was able to fit, add "NO FIT". Otherwise, push the cars
-        parkCarType.push("NO FIT");
+        parkCarType.push(0);
       else
         parkCarType.push(tempCarType);
   }
@@ -150,22 +170,12 @@ function Car(leng, padding){
 // EVENT HANDELERS //
 /////////////////////
 
-// SLIDER
-$("#lengthSlider").click(function(){
-  //lastCarLength = this.value;
-  CHOSEN_CAR_LENGTH = this.value-0;
-  $("#lengthDisplay").text("Length: " + CHOSEN_CAR_LENGTH);
-  ctx.clearRect(0,0,canvasWidth,canvasHeight);
-  drawHorizontalLines();
-  var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
-  car.fill(ctx, lastXPos, lastYPos);
 
-});
 
 // PARK BUTTON
 $("#park").click(function(){
-  if(lastYPos > 75 || lastYPos < 15){
-    ctx.fillText("BAD PARKING", lastXPos + 60, lastYPos - 10);
+  if(lastYPos > 75 || lastYPos < 15 || lastXPos > 539 || lastXPos < 0){
+    $("#result").text("Way off, buddy. Please try again");
   } else {
       var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
       ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
@@ -183,6 +193,7 @@ $("#park").click(function(){
       ctx.fillText(parkedCars[0], 50, 50);
       ctx.fillText(parkedCars[1], 200, 50);
       drawPackedCars(parkedCars);
+      drawResults(parkedCars);
     }
 })
 

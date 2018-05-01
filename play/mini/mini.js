@@ -5,26 +5,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight - 120;
 var ctx = canvas.getContext("2d"); // 2D rendering space
 
-var lastXPos, lastYPos, lastCarLength;
-var PARKING_SPACING = 200; // spacing between each vertical parking line
-var VERTICAL_LINE_LENGTH = 200;
-var PARKING_START_LOCATION = 10;
-var NUM_SPACES = 4;
-var SCALE_FACTOR = 0.2;
-var PADDING_FOR_PARKING_FRONT = 5;
-var PADDING_FOR_PARKING_SIDES = 5;
-var CAR_WIDTH = 100;
-var DEFAULT_CAR_LENGTH = 100;
-var DEFAULT_CAR_PADDING = 5;
-// RESULT CAR VARIABLES
-var SMALL_CAR_LENGTH = 180;
-var MED_CAR_LENGTH = 200;
-var LARGE_CAR_LENGTH = 250;
-// STAYS UNCHANGE
-var CAR_HEIGHT = 50;
-// CHANGABLE PARAMETERS
-var CHOSEN_CAR_LENGTH = 20;
-var CHOSEN_PADDING = 10;
+
 
 // LOAD THE IMAGE
 var img = new Image();
