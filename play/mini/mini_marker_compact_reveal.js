@@ -28,7 +28,7 @@ var CHOSEN_PADDING = 10;
 // DRAW RATIOS
 var RATIO_DRAW_PADDING = 0.5;
 var ADDED_DRAW_LENGTH = 160;
-var REQUIRED_PARKING_SPACE = 1;
+var REQUIRED_PARKING_SPACE = 0;
 var PARKING_WIDTH = canvas.width/NUM_SPACES;
 
 // LOAD THE IMAGE
@@ -39,37 +39,29 @@ img.onload = function(){
 img.src = "../img/player_car.png";
 
 // DRAWING BOARD ===========================================================================================================
-lastCarLength = CHOSEN_CAR_LENGTH;
-placeParkZone(REQUIRED_PARKING_SPACE);
-drawHorizontalLines(PARKING_START_LOCATION);
-drawVerticalLines(NUM_SPACES, PARKING_START_LOCATION);
-var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
-car.fill(ctx, window.innerWidth/2, window.innerHeight/2);
 lastXPos = window.innerWidth/2;
 lastYPos = window.innerHeight/2;
-drawPadding();
+lastCarLength = CHOSEN_CAR_LENGTH;
+removeCarsAndReset();
 
-drawHorizontalLines(150);
-drawVerticalLines(NUM_SPACES, 150);
 
 
 // FUNCTIONS ===============================================================================================================
-function showSecondLayer(){
-  drawSmallCars();
-}
+
+
+
 function drawSmallCars(){
 
-  for(var i = 0; i < 4; i++){
+  for(var i = 1; i < 4; i++){
     var randomPadding = 15 + Math.floor(Math.random()*Math.floor(10));
     var smallRand = 5 + Math.floor(Math.random()*Math.floor(10));
     var car = new Car(SMALL_CAR_LENGTH-170, CHOSEN_PADDING);
-    car.fill(ctx, smallRand + (randomPadding*i) + (SMALL_CAR_LENGTH*i), 175);
+    car.fill(ctx, smallRand + (randomPadding*i) + (SMALL_CAR_LENGTH*i), 25);
 
   }
 }
 
-
-function removeCars(){
+function removeCarsAndReset(){
   ctx.clearRect(0,0,canvasWidth,canvasHeight);
   placeParkZone(REQUIRED_PARKING_SPACE);
   drawHorizontalLines(PARKING_START_LOCATION);
@@ -77,14 +69,14 @@ function removeCars(){
   var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
   car.fill(ctx, lastXPos, lastYPos);
 
-  drawHorizontalLines(150);
-  drawVerticalLines(NUM_SPACES, 150);
+
 }
 
 function placeParkZone(spot){
+  temp = canvas.width/4;
   ctx.beginPath();
   ctx.fillStyle = "#bdffb7";
-  ctx.fillRect((PARKING_WIDTH)*spot, PARKING_START_LOCATION, (PARKING_WIDTH),100);
+  ctx.fillRect((temp)*spot, PARKING_START_LOCATION, (temp),100);
   ctx.stroke();
   ctx.closePath();
 }
@@ -121,7 +113,7 @@ function chooseRandomPadding(){
 }
 
 function onPark(){
-  removeCars();
+  removeCarsAndReset();;
   drawPadding();
 
       var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
@@ -303,24 +295,28 @@ $("#padSlider").click(function(){
 });
 
 var animation;
+var resetBtnToggle = true;
+var parkBtnToggle = false;
 
 // PARK BUTTON
 $("#park").click(function(){
-  if(lastYPos > 75 || lastYPos < 15 || lastXPos > 374 - CHOSEN_CAR_LENGTH || lastXPos < 265){
-    $("#result").text("Way off, buddy. Please try again");
-  } else {
-    animation = setInterval(function(){
-      removeCars();
-      drawCarsWithMarkers();
-      showSecondLayer();
 
-    }, 600);;
+  if(lastYPos > 36 || lastYPos < 15 || lastXPos < 0 || lastXPos > 40){
+    $("#result").text("Don't you know how to park?");
+  } else if(resetBtnToggle){
+      removeCarsAndReset();
+      drawSmallCars();
+    parkBtnToggle = true;
+    resetBtnToggle = false;
   }
 })
 
 $("#reset").click(function(){
-  removeCars();
-  clearInterval(animation);
+  if(parkBtnToggle){
+    removeCarsAndReset();
+    resetBtnToggle = true;
+    parkBtnToggle = false;
+  }
 })
 
 
@@ -350,6 +346,8 @@ var canvasOffset=$("#canvas").offset();
       if(started && !isDragging){
           // ADD IN FUNCTION AFTER DROPPING CAR
           clearInterval(animation);
+          resetBtnToggle = true;
+          parkBtnToggle = false;
 
       }
 
@@ -368,7 +366,7 @@ var canvasOffset=$("#canvas").offset();
       // if the drag flag is set, clear the canvas and draw the image
       if(isDragging){
         clearInterval(animation);
-          removeCars();
+          removeCarsAndReset();
           //var car = new Car(lastCarLength-0, CHOSEN_PADDING);
           var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
           car.fill(ctx,canMouseX-128/2,canMouseY-120/2);
@@ -378,6 +376,7 @@ var canvasOffset=$("#canvas").offset();
 
           ctx.fillStyle = "black";
           ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
+
 
         //  ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);
       }
