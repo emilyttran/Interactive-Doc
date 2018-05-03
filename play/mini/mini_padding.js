@@ -55,6 +55,7 @@ function drawResults(parkedCars){
  for(var i = 0; i < parkedCars.length; i++){
    for(var j = 0; j < parkedCars[i].length; j++){
      sum += parkedCars[i][j];
+     console.log(parkedCars[i][j]);
    }
  }
 
@@ -143,7 +144,7 @@ function binPack(binCapacity){ // bin = capacity of each bin
         }
       }
       if(tempCarType.length == 0) // if no car was able to fit, add "NO FIT". Otherwise, push the cars
-        parkCarType.push("NO FIT");
+        parkCarType.push(0);
       else
         parkCarType.push(tempCarType);
   }
