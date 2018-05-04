@@ -48,6 +48,15 @@ drawPadding();
 
 
 // FUNCTIONS ===============================================================================================================
+function addResultText(text , position){
+  ctx.fillStyle = "black";
+  ctx.fillRect(canvas.width*0.2, 165, canvas.width*0.6, 50);
+  ctx.fillStyle = "white"
+  ctx.font = "30px sans-serif"
+  console.log("hi");
+  ctx.fillText(text, position, 200);
+}
+
 function drawResults(parkedCars){
   var sum = 0;
 
@@ -59,14 +68,17 @@ function drawResults(parkedCars){
    }
  }
 
-if(sum == 3){
-   $("#result").text("Thanks for parking well :)");
- }
-   else if (sum == 0){
-   $("#result").text("Nice. You managed to be the parking jerk.");
- } else {
-   $("#result").text("That's an OK job. Try again");
- }
+ if(lastYPos > 75 || lastYPos < 15 || lastXPos > 378 - CHOSEN_CAR_LENGTH || lastXPos < 0)
+   addResultText("You call that parking? Try again", 190);
+  else if(sum == 3)
+   addResultText("Yay, small cars are awesome", 215);
+  else if(sum == 2 && CHOSEN_CAR_LENGTH < 48)
+   addResultText("You don't deserve a compact car", 190);
+  else if(sum == 2)
+   addResultText("This is okay", 210);
+  else
+   addResultText("You and your long car, jerk", 230);
+
 }
 
 function drawPackedCars(parkCarType){

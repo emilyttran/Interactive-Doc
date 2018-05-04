@@ -18,7 +18,7 @@ var DEFAULT_CAR_LENGTH = 100;
 var DEFAULT_CAR_PADDING = 5;
 // RESULT CAR VARIABLES
 var SMALL_CAR_LENGTH = 180;
-var MED_CAR_LENGTH = 200;
+var MED_CAR_LENGTH = 220;
 var LARGE_CAR_LENGTH = 250;
 // STAYS UNCHANGE
 var CAR_HEIGHT = 50;
@@ -44,13 +44,22 @@ car.fill(ctx, window.innerWidth/2, window.innerHeight/2);
 drawHorizontalLines();
 lastXPos = window.innerWidth/2;
 lastYPos = window.innerHeight/2;
-drawPadding();
+
 
 
 // FUNCTIONS ===============================================================================================================
+function addResultText(text , position){
+  ctx.fillStyle = "black";
+  ctx.fillRect(canvas.width*0.2, 165, canvas.width*0.6, 50);
+  ctx.fillStyle = "white"
+  ctx.font = "30px sans-serif"
+  console.log("hi");
+  ctx.fillText(text, position, 200);
+}
+
 function onPark(){
   removeCars();
-  drawPadding();
+  
 
       var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
       ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
@@ -83,19 +92,17 @@ function drawResults(parkedCars){
    }
  }
 
-if(sum == 3){
-   $("#result").text("Thanks for parking well :)");
- }
-   else if (sum == 0){
-   $("#result").text("Nice. You managed to be the parking jerk.");
- } else {
-   $("#result").text("That's an OK job. Try again");
- }
+
 }
 
 function drawCar(totalLength, carLength, i){
   var car = new Car(carLength-170, CHOSEN_PADDING);
   car.fill(ctx,totalLength + i*CHOSEN_PADDING*RATIO_DRAW_PADDING + i*CHOSEN_PADDING, 40);
+}
+
+function chooseRandomPadding(){
+  var randomPadding = Math.floor(Math.random()*Math.floor(10));
+  return randomPadding;
 }
 
 function drawPackedCars(parkCarType){
@@ -106,6 +113,8 @@ function drawPackedCars(parkCarType){
   for(var i = 0; i < parkCarType[0].length; i++){
     var stop = false;
     var carLength;
+
+    var randomPadding = chooseRandomPadding() + 5;
 
     if(parkCarType[0][i] == 1){
       carLength = SMALL_CAR_LENGTH-0;
@@ -118,13 +127,13 @@ function drawPackedCars(parkCarType){
     }
 
     if(i == 0 && carLength == LARGE_CAR_LENGTH){
-      totalLength = 0;
+      totalLength = randomPadding;
       temp = LARGE_CAR_LENGTH - 175;
     }
     else if(i == 0)
-      totalLength = 0;
+      totalLength = randomPadding;
     else{
-      totalLength += carLength + temp;
+      totalLength += carLength + temp + randomPadding;
       temp = 0;
     }
 
@@ -137,6 +146,7 @@ function drawPackedCars(parkCarType){
 
     var stop = false;
     var carLength;
+    var totalPadding = 0;
 
     if(parkCarType[1][i] == 1){
       carLength = SMALL_CAR_LENGTH-0;
@@ -144,10 +154,14 @@ function drawPackedCars(parkCarType){
       carLength = MED_CAR_LENGTH-0;
     } else if(parkCarType[1][i] == 3){
       carLength = LARGE_CAR_LENGTH-0;
-    } else{
-      break;
     }
+    var randomPadding = chooseRandomPadding();
 
+    if(parkCarType[1][i] ==1)
+      carLengthNew = carLength + 25;
+    else {
+      carLengthNew = carLength;
+    }
     if(i == 0 && carLength == LARGE_CAR_LENGTH){
       totalLength = 0;
       temp = LARGE_CAR_LENGTH - 175;
@@ -155,11 +169,13 @@ function drawPackedCars(parkCarType){
     else if(i == 0)
       totalLength = 0;
     else{
-      totalLength += carLength + temp;
+      totalLength += carLengthNew + temp;
       temp = 0;
     }
       var car = new Car(carLength-173, CHOSEN_PADDING);
-      car.fill(ctx,(i*carLength) + CHOSEN_PADDING + lastXPos + CHOSEN_CAR_LENGTH+ 170 + i*CHOSEN_PADDING, 40);
+      car.fill(ctx, lastXPos + 185 + totalLength + totalPadding + CHOSEN_CAR_LENGTH, 40)
+      totalPadding += randomPadding;
+      //car.fill(ctx,(i*carLength) + CHOSEN_PADDING + lastXPos + CHOSEN_CAR_LENGTH+ 170 + i*CHOSEN_PADDING, 40);
 
 
   }
@@ -250,34 +266,31 @@ $("#lengthSlider").click(function(){
   ctx.clearRect(0,0,canvasWidth,canvasHeight);
   drawHorizontalLines();
   var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
-  drawPadding();
+  
   car.fill(ctx, lastXPos, lastYPos);
 });
 
-$("#padSlider").click(function(){
-  //lastCarLength = this.value;
-  CHOSEN_PADDING = this.value-0;
-  $("#padDisplay").text("Padding: " + CHOSEN_PADDING);
-  ctx.clearRect(0,0,canvasWidth,canvasHeight);
-  drawHorizontalLines();
-  var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
-  drawPadding();
-  car.fill(ctx, lastXPos, lastYPos);
-});
 
 var time;
-
+var resetBtnToggle = true;
+var parkBtnToggle = false;
 // PARK BUTTON
 $("#park").click(function(){
   if(lastYPos > 75 || lastYPos < 15 || lastXPos > PARKING_SPACING*(NUM_SPACES+1)-380 - CHOSEN_PADDING*RATIO_DRAW_PADDING || lastXPos < CHOSEN_PADDING*RATIO_DRAW_PADDING){
-    $("#result").text("Way off, buddy. Please try again");
-  } else {
-    time = setInterval(onPark,1000);
+    addResultText("You call that parking? Try again", 190);
+  } else if (resetBtnToggle){
+    time = setInterval(onPark, 1000);
+    resetBtnToggle = false;
+    parkBtnToggle = true;
   }
 })
 
 $("#reset").click(function(){
-  clearInterval(time);
+  if(parkBtnToggle){
+    clearInterval(time);
+    resetBtnToggle = true;
+    parkBtnToggle = false;
+  }
 })
 
 function removeCars(){
@@ -337,7 +350,10 @@ var canvasOffset=$("#canvas").offset();
           car.fill(ctx,canMouseX-128/2,canMouseY-120/2);
           lastXPos = canMouseX-128/2;
           lastYPos = canMouseY-120/2;
-          drawPadding();
+          
+
+          resetBtnToggle = true;
+          parkBtnToggle = false;
         //  ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);
       }
     }

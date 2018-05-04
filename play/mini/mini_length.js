@@ -23,7 +23,7 @@ var LARGE_CAR_LENGTH = 250;
 // STAYS UNCHANGE
 var CAR_HEIGHT = 50;
 // CHANGABLE PARAMETERS
-var CHOSEN_CAR_LENGTH = 100;
+var CHOSEN_CAR_LENGTH = 50;
 var CHOSEN_PADDING = 10;
 
 // LOAD THE IMAGE
@@ -62,14 +62,17 @@ function drawResults(parkedCars){
    }
  }
 
- if(lastYPos > 75 || lastYPos < 15 || lastXPos > 539 || lastXPos < 0){
-   addResultText("You call that parking? Try again", 190);
- } else if(sum == 2){
-   addResultText("Yeah, that works.", 275);
- }
- else {
+if(sum == 3 && CHOSEN_CAR_LENGTH < 71)
+   addResultText("This is acceptable :)", 250);
+else if(sum == 2 && CHOSEN_CAR_LENGTH < 40)
+   addResultText("...but you have a compact car", 200)
+else if(sum == 2 && CHOSEN_CAR_LENGTH < 71)
+   addResultText("How could you waste space??", 200);
+else if(sum == 2 && CHOSEN_CAR_LENGTH >= 71)
+   addResultText("Good job, long car driver", 220)
+else
    addResultText("You and your long car, jerk", 230);
- }
+
 }
 
 function drawPackedCars(parkCarType){
@@ -183,7 +186,7 @@ function Car(leng, padding){
 
 // PARK BUTTON
 $("#park").click(function(){
-  if(lastYPos > 75 || lastYPos < 15 || lastXPos > 539 || lastXPos < 0){
+  if(lastYPos > 75 || lastYPos < 15 || lastXPos > 641 - CHOSEN_CAR_LENGTH || lastXPos < 0){
     addResultText("You call that parking? Try again", 190);
   } else {
       var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
@@ -205,6 +208,16 @@ $("#park").click(function(){
       drawResults(parkedCars);
     }
 })
+
+$("#lengthSlider").click(function(){
+  //lastCarLength = this.value;
+  CHOSEN_CAR_LENGTH = this.value-0;
+  $("#lengthDisplay").text("Length: " + CHOSEN_CAR_LENGTH);
+  ctx.clearRect(0,0,canvasWidth,canvasHeight);
+  drawHorizontalLines();
+  var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
+  car.fill(ctx, lastXPos, lastYPos);
+});
 
 // RESET BUTTON
 $("#reset").click(function(){
@@ -262,6 +275,9 @@ var canvasOffset=$("#canvas").offset();
           car.fill(ctx,canMouseX-128/2,canMouseY-120/2);
           lastXPos = canMouseX-128/2;
           lastYPos = canMouseY-120/2;
+
+          ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
+
         //  ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);
       }
     }
