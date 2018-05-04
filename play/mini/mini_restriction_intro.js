@@ -58,14 +58,26 @@ function Car(leng, padding){
 
 // DRAWING BOARD ===========================================================================================================
 lastCarLength = CHOSEN_CAR_LENGTH;
+removeCarsAndReset();
 
-
-drawHorizontalLines();
 lastXPos = window.innerWidth/2;
 lastYPos = window.innerHeight/2;
 
 
 // FUNCTIONS ===============================================================================================================
+function verticalBorders(){
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, PARKING_START_LOCATION);
+  ctx.lineTo(0, 150);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(canvas.width, PARKING_START_LOCATION);
+  ctx.lineTo(canvas.width, 150)
+  ctx.stroke();
+}
+
 function placeNotJerkCar(){
   var randomPadding = Math.floor(Math.random()*Math.floor(50));
 
@@ -76,6 +88,7 @@ function removeCarsAndReset(){
   var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
   ctx.clearRect(0,0,canvasWidth,canvasHeight);
   car.fill(ctx, lastXPos, lastYPos);
+  verticalBorders();
   drawHorizontalLines();
 }
 
@@ -251,9 +264,9 @@ var canvasOffset=$("#canvas").offset();
       if(isDragging){
 
           ctx.clearRect(0,0,canvasWidth,canvasHeight);
-          ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
+          //ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
+          removeCarsAndReset();
 
-          drawHorizontalLines();
           //var car = new Car(lastCarLength-0, CHOSEN_PADDING);
           ctx.drawImage(blueCar, 75, 30, img.width*SCALE_FACTOR + 100, img.height*SCALE_FACTOR);
           ctx.drawImage(img, 590, 30, img.width*SCALE_FACTOR + CHOSEN_CAR_LENGTH, img.height*SCALE_FACTOR);

@@ -39,15 +39,26 @@ img.src = "../img/player_car.png";
 
 // DRAWING BOARD ===========================================================================================================
 lastCarLength = CHOSEN_CAR_LENGTH;
-var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
-car.fill(ctx, window.innerWidth/2, window.innerHeight/2);
-drawHorizontalLines();
+removeCarsAndReset();
 lastXPos = window.innerWidth/2;
 lastYPos = window.innerHeight/2;
 
 
 
 // FUNCTIONS ===============================================================================================================
+function verticalBorders(){
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, PARKING_START_LOCATION);
+  ctx.lineTo(0, 150);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(canvas.width, PARKING_START_LOCATION);
+  ctx.lineTo(canvas.width, 150)
+  ctx.stroke();
+}
+
 function addResultText(text , position){
   ctx.fillStyle = "black";
   ctx.fillRect(canvas.width*0.2, 165, canvas.width*0.6, 50);
@@ -58,7 +69,7 @@ function addResultText(text , position){
 }
 
 function onPark(){
-  removeCars();
+  removeCarsAndReset();
 
 
       var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
@@ -295,10 +306,11 @@ $("#reset").click(function(){
   }
 })
 
-function removeCars(){
+function removeCarsAndReset(){
   var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
   ctx.clearRect(0,0,canvasWidth,canvasHeight);
   car.fill(ctx, lastXPos, lastYPos);
+  verticalBorders();
   drawHorizontalLines();
 }
 
@@ -345,15 +357,11 @@ var canvasOffset=$("#canvas").offset();
       canMouseY=parseInt(e.clientY-offsetY);
       // if the drag flag is set, clear the canvas and draw the image
       if(isDragging){
-          ctx.clearRect(0,0,canvasWidth,canvasHeight);
-          drawHorizontalLines();
-          //var car = new Car(lastCarLength-0, CHOSEN_PADDING);
-          var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
-          car.fill(ctx,canMouseX-128/2,canMouseY-120/2);
+
           lastXPos = canMouseX-128/2;
           lastYPos = canMouseY-120/2;
 
-
+          removeCarsAndReset();
           resetBtnToggle = true;
           parkBtnToggle = false;
         //  ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);

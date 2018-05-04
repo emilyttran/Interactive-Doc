@@ -115,4 +115,6 @@ body{
 
 .controlPanel {
   height:  inherit;
+	display: block;
+	width: inherit;
 }
