@@ -295,31 +295,24 @@ $("#padSlider").click(function(){
   car.fill(ctx, lastXPos, lastYPos);
 });
 
-var animation;
-var resetBtnToggle = true;
-var parkBtnToggle = false;
+
 
 // PARK BUTTON
 $("#park").click(function(){
 
   if(lastYPos > 36 || lastYPos < 15 || lastXPos > 541 || lastXPos < 0){
-    $("#result").text("Way off, buddy. Please try again");
-  } else if(resetBtnToggle){
+    ctx.fillStyle = "black";
+    ctx.fillRect(canvas.width*0.2, 165, canvas.width*0.6, 50);
+    ctx.fillStyle = "white"
+    ctx.font = "30px sans-serif"
+    ctx.fillText("At least try to park right. Jeezus", 190, 200);
+  } else {
       removeCarsAndReset();
       addResultText();
-    parkBtnToggle = true;
-    resetBtnToggle = false;
   }
 })
 
-$("#reset").click(function(){
-  if(parkBtnToggle){
-    removeCarsAndReset();
-    clearInterval(animation);
-    resetBtnToggle = true;
-    parkBtnToggle = false;
-  }
-})
+
 
 
 
@@ -347,7 +340,7 @@ var canvasOffset=$("#canvas").offset();
 
       if(started && !isDragging){
           // ADD IN FUNCTION AFTER DROPPING CAR
-          clearInterval(animation);
+
           resetBtnToggle = true;
           parkBtnToggle = false;
 
@@ -367,17 +360,17 @@ var canvasOffset=$("#canvas").offset();
       canMouseY=parseInt(e.clientY-offsetY);
       // if the drag flag is set, clear the canvas and draw the image
       if(isDragging){
-        clearInterval(animation);
+
           removeCarsAndReset();
           //var car = new Car(lastCarLength-0, CHOSEN_PADDING);
           var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
           car.fill(ctx,canMouseX-128/2,canMouseY-120/2);
           lastXPos = canMouseX-128/2;
           lastYPos = canMouseY-120/2;
-          drawPadding();
+          //drawPadding();
 
           ctx.fillStyle = "black";
-          ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
+          //ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
 
 
         //  ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);

@@ -77,6 +77,14 @@ iframe[embedded]{
 .instruction{
 	text-align:center; font-weight:bold; font-size:25px
 }
+.closing_statements{
+	text-align:left; font-weight:bold; font-size:20px
+}
+
+.title{
+	text-align:left; font-weight:bold; font-size:40px; margin-bottom: -20px;
+
+}
 
 /**
 span[cartoon]{

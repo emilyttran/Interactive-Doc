@@ -48,7 +48,14 @@ removeCarsAndReset();
 
 // FUNCTIONS ===============================================================================================================
 
-
+function addResultText(text , position){
+  ctx.fillStyle = "black";
+  ctx.fillRect(canvas.width*0.2, 165, canvas.width*0.6, 50);
+  ctx.fillStyle = "white"
+  ctx.font = "30px sans-serif"
+  console.log("hi");
+  ctx.fillText(text, position, 200);
+}
 
 function drawSmallCars(){
 
@@ -294,30 +301,21 @@ $("#padSlider").click(function(){
   car.fill(ctx, lastXPos, lastYPos);
 });
 
-var animation;
-var resetBtnToggle = true;
-var parkBtnToggle = false;
+
 
 // PARK BUTTON
 $("#park").click(function(){
 
   if(lastYPos > 36 || lastYPos < 15 || lastXPos < 0 || lastXPos > 40){
-    $("#result").text("Try again, buddy.");
+    addResultText("Aiya. Try again", 300);
   } else if(resetBtnToggle){
       removeCarsAndReset();
       drawSmallCars();
-    parkBtnToggle = true;
-    resetBtnToggle = false;
+      addResultText("Good job", 340);
   }
 })
 
-$("#reset").click(function(){
-  if(parkBtnToggle){
-    removeCarsAndReset();
-    resetBtnToggle = true;
-    parkBtnToggle = false;
-  }
-})
+
 
 
 
@@ -345,7 +343,6 @@ var canvasOffset=$("#canvas").offset();
 
       if(started && !isDragging){
           // ADD IN FUNCTION AFTER DROPPING CAR
-          clearInterval(animation);
           resetBtnToggle = true;
           parkBtnToggle = false;
 
@@ -365,17 +362,16 @@ var canvasOffset=$("#canvas").offset();
       canMouseY=parseInt(e.clientY-offsetY);
       // if the drag flag is set, clear the canvas and draw the image
       if(isDragging){
-        clearInterval(animation);
           removeCarsAndReset();
           //var car = new Car(lastCarLength-0, CHOSEN_PADDING);
           var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
           car.fill(ctx,canMouseX-128/2,canMouseY-120/2);
           lastXPos = canMouseX-128/2;
           lastYPos = canMouseY-120/2;
-          drawPadding();
+          //drawPadding();
 
           ctx.fillStyle = "black";
-          ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
+        //  ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
 
 
         //  ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);

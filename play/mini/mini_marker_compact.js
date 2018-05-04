@@ -47,7 +47,14 @@ removeCarsAndReset();
 
 // FUNCTIONS ===============================================================================================================
 
-
+function addResultText(text , position){
+  ctx.fillStyle = "black";
+  ctx.fillRect(canvas.width*0.2, 165, canvas.width*0.6, 50);
+  ctx.fillStyle = "white"
+  ctx.font = "30px sans-serif"
+  console.log("hi");
+  ctx.fillText(text, position, 200);
+}
 
 function drawSmallCars(){
 
@@ -112,7 +119,7 @@ function chooseRandomPadding(){
 
 function onPark(){
   removeCarsAndReset();;
-  drawPadding();
+
 
       var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
       ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
@@ -144,15 +151,6 @@ function drawResults(parkedCars){
      console.log(parkedCars[i][j]);
    }
  }
-
-if(sum == 3){
-   $("#result").text("Thanks for parking well :)");
- }
-   else if (sum == 0){
-   $("#result").text("Nice. You managed to be the parking jerk.");
- } else {
-   $("#result").text("That's an OK job. Try again");
- }
 }
 
 function drawCar(randomPadding, carLength, spot){
@@ -177,38 +175,7 @@ function drawPackedCarPerSpace(parkCarType, spot){
 
 }
 
-// takes in array of bin capacities. Returns array of types that can fit
-function binPack(binCapacity){ // bin = capacity of each bin
-  var hasRoom;
-  var tempCarType = []; // keep track of all the cars per bin
-  var parkCarType = []; // 1 = small, 2 = medium, 3 = large
-  var rand;
-  for(var i = 0; i < binCapacity.length; i++){ // go through every bin
-    hasRoom = true;
-    tempCarType = []; // empty out the temp
-    while(hasRoom){
-      rand = chooseRandomCarType();
-        if(SMALL_CAR_LENGTH + CHOSEN_PADDING > binCapacity[i]){
-          hasRoom = false;
-        } else if((rand == 1) && binCapacity[i] >= SMALL_CAR_LENGTH + CHOSEN_PADDING){
-          binCapacity[i] -= SMALL_CAR_LENGTH + CHOSEN_PADDING;
-          tempCarType.push(1);
-        } else if((rand == 2) && binCapacity[i] >= MED_CAR_LENGTH + CHOSEN_PADDING){
-          binCapacity[i] -= MED_CAR_LENGTH + CHOSEN_PADDING;
-          tempCarType.push(2);
-        } else if((rand == 3) && binCapacity[i] >= LARGE_CAR_LENGTH + CHOSEN_PADDING){
-          binCapacity[i] -= LARGE_CAR_LENGTH + CHOSEN_PADDING;
-          tempCarType.push(3);
-        }
-      }
-      if(tempCarType.length == 0) // if no car was able to fit, add "NO FIT". Otherwise, push the cars
-        parkCarType.push(0);
-      else
-        parkCarType.push(tempCarType);
-  }
-  return parkCarType;
 
-}
 
 function drawPadding(){
   // draw the padding lines
@@ -275,7 +242,7 @@ $("#lengthSlider").click(function(){
   drawHorizontalLines(PARKING_START_LOCATION);
   drawVerticalLines(NUM_SPACES, PARKING_START_LOCATION);
   var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
-  drawPadding();
+
   car.fill(ctx, lastXPos, lastYPos);
 });
 
@@ -288,33 +255,22 @@ $("#padSlider").click(function(){
   drawHorizontalLines(PARKING_START_LOCATION);
   drawVerticalLines(NUM_SPACES, PARKING_START_LOCATION);
   var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
-  drawPadding();
+
   car.fill(ctx, lastXPos, lastYPos);
 });
 
-var animation;
-var resetBtnToggle = true;
-var parkBtnToggle = false;
+
 
 // PARK BUTTON
 $("#park").click(function(){
 
   if(lastYPos > 36 || lastYPos < 15 || lastXPos > 374 - CHOSEN_CAR_LENGTH || lastXPos < 265){
-    $("#result").text("Way off, buddy. Please try again");
+    addResultText("Yikes dude. Try again", 240);
   } else if(resetBtnToggle){
       removeCarsAndReset();
       drawCarsWithMarkers();
-    parkBtnToggle = true;
-    resetBtnToggle = false;
-  }
-})
+      addResultText("Wow. So good.", 285);
 
-$("#reset").click(function(){
-  if(parkBtnToggle){
-    removeCarsAndReset();
-    clearInterval(animation);
-    resetBtnToggle = true;
-    parkBtnToggle = false;
   }
 })
 
@@ -344,7 +300,6 @@ var canvasOffset=$("#canvas").offset();
 
       if(started && !isDragging){
           // ADD IN FUNCTION AFTER DROPPING CAR
-          clearInterval(animation);
           resetBtnToggle = true;
           parkBtnToggle = false;
 
@@ -364,20 +319,17 @@ var canvasOffset=$("#canvas").offset();
       canMouseY=parseInt(e.clientY-offsetY);
       // if the drag flag is set, clear the canvas and draw the image
       if(isDragging){
-        clearInterval(animation);
           removeCarsAndReset();
-          //var car = new Car(lastCarLength-0, CHOSEN_PADDING);
           var car = new Car(CHOSEN_CAR_LENGTH, CHOSEN_PADDING);
           car.fill(ctx,canMouseX-128/2,canMouseY-120/2);
           lastXPos = canMouseX-128/2;
           lastYPos = canMouseY-120/2;
-          drawPadding();
+
 
           ctx.fillStyle = "black";
-          ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
+          //ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
 
 
-        //  ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);
       }
     }
 

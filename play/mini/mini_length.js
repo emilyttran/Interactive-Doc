@@ -69,7 +69,7 @@ else if(sum == 2 && CHOSEN_CAR_LENGTH < 40)
 else if(sum == 2 && CHOSEN_CAR_LENGTH < 71)
    addResultText("How could you waste space??", 200);
 else if(sum == 2 && CHOSEN_CAR_LENGTH >= 71)
-   addResultText("Good job, long car driver", 220)
+   addResultText("This will do, long car driver", 210)
 else
    addResultText("You and your long car, jerk", 230);
 
@@ -190,20 +190,20 @@ $("#park").click(function(){
     addResultText("You call that parking? Try again", 190);
   } else {
       var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
-      ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
+      //ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
       // lengths depending on the last position of the car (aka parked)
       LengthL = lastXPos;
       LengthR = 800 - (lastXPos + PIXEL_CHOSEN_CAR_LENGTH);
-      ctx.fillText("L", LengthL, 25);
-      ctx.fillText("R", -(LengthR - 800), 25);
+      //ctx.fillText("L", LengthL, 25);
+      //ctx.fillText("R", -(LengthR - 800), 25);
       var bin = [];
       bin[0] = LengthL;
       bin[1] = LengthR;
       //bin[0] = 200;
       //bin[1] = 170;
       var parkedCars = binPack(bin);
-      ctx.fillText(parkedCars[0], 50, 50);
-      ctx.fillText(parkedCars[1], 200, 50);
+      //ctx.fillText(parkedCars[0], 50, 50);
+      //ctx.fillText(parkedCars[1], 200, 50);
       drawPackedCars(parkedCars);
       drawResults(parkedCars);
     }
@@ -276,7 +276,7 @@ var canvasOffset=$("#canvas").offset();
           lastXPos = canMouseX-128/2;
           lastYPos = canMouseY-120/2;
 
-          ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
+          //ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
 
         //  ctx.drawImage(img,canMouseX-128/2,canMouseY-120/2, img.width*SCALE_FACTOR, img.height*SCALE_FACTOR);
       }
