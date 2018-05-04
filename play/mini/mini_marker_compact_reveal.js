@@ -302,7 +302,7 @@ var parkBtnToggle = false;
 $("#park").click(function(){
 
   if(lastYPos > 36 || lastYPos < 15 || lastXPos < 0 || lastXPos > 40){
-    $("#result").text("Don't you know how to park?");
+    $("#result").text("Try again, buddy.");
   } else if(resetBtnToggle){
       removeCarsAndReset();
       drawSmallCars();

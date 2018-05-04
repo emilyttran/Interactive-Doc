@@ -43,6 +43,15 @@ lastYPos = window.innerHeight/2;
 
 
 // FUNCTIONS ===============================================================================================================
+function addResultText(text , position){
+  ctx.fillStyle = "black";
+  ctx.fillRect(canvas.width*0.2, 165, canvas.width*0.6, 50);
+  ctx.fillStyle = "white"
+  ctx.font = "30px sans-serif"
+  console.log("hi");
+  ctx.fillText(text, position, 200);
+}
+
 function drawResults(parkedCars){
   var sum = 0;
 
@@ -54,12 +63,12 @@ function drawResults(parkedCars){
  }
 
  if(lastYPos > 75 || lastYPos < 15 || lastXPos > 539 || lastXPos < 0){
-   $("#result").text("Way off, buddy. Please try again");
+   addResultText("You call that parking? Try again", 190);
  } else if(sum == 3){
-   $("#result").text("Thanks for parking well :)");
+   addResultText("Thanks for being considerate", 230);
  }
  else {
-   $("#result").text("You're wasting room :(");
+   addResultText("You parking jerk.", 280);
  }
 }
 
@@ -175,7 +184,7 @@ function Car(leng, padding){
 // PARK BUTTON
 $("#park").click(function(){
   if(lastYPos > 75 || lastYPos < 15 || lastXPos > 539 || lastXPos < 0){
-    $("#result").text("Way off, buddy. Please try again");
+    addResultText("You call that parking? Try again", 190);
   } else {
       var PIXEL_CHOSEN_CAR_LENGTH = CHOSEN_CAR_LENGTH + 160;
       ctx.fillText("X: "+ lastXPos +", Y: "+ lastYPos, lastXPos, lastYPos + 100);
